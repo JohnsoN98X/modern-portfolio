@@ -1,0 +1,10 @@
+data/*
+!data/.gitkeep
+
+__pycache__/
+*.py[cod]
+
+# Ignore Jupyter checkpoints
+**/.ipynb_checkpoints/
+
+

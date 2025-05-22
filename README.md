@@ -11,7 +11,7 @@ This project provides a practical implementation of **Modern Portfolio Theory**,
 
 The project currently includes three core classes:
 
-### 1. `MeanVarOpt`
+### 1. `MeanVarianceOpt`
 Performs **Mean-Variance Optimization** as defined in modern finance literature.  
 While most academic references focus on analytical solutions, these are often impractical. This class performs **convex numerical optimization** using the `cvxpy` library.
 
@@ -30,7 +30,7 @@ This class is **not intended to be used directly**, but serves as the foundation
 
 | Purpose               | Libraries Needed                                                                 |
 |------------------------|----------------------------------------------------------------------------------|
-| Running the classes   | `pandas`, `numpy`, `cvxpy` *(for MeanVarOpt only)*                              |
+| Running the classes   | `pandas`, `numpy`, `cvxpy` *(for MeanVarianceOpt only)*                              |
 | Running the notebooks | `pandas`, `numpy`, `matplotlib`, `seaborn`, `scipy`, `statsmodels`              |
 
 ---
@@ -38,7 +38,7 @@ This class is **not intended to be used directly**, but serves as the foundation
 ## ⚙️ Data Input Requirements
 
 - All inputs must be `pandas.Series` or `pandas.DataFrame` depending on the class:
-  - `MeanVarOpt` expects a DataFrame of asset returns.
+  - `MeanVarianceOpt` expects a DataFrame of asset returns.
   - `CAPM` expects a DataFrame of assets and a separate Series for market returns.
 - The index must represent dates. If not explicitly a `DatetimeIndex`, the class will attempt to convert it using `pd.to_datetime()`.
 - Inputs must contain **daily log-returns**.
