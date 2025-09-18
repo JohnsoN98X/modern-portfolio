@@ -6,7 +6,7 @@ plt.rcParams['axes.unicode_minus'] = False
 import seaborn as sns
 import logging
 logging.basicConfig(level=logging.INFO)
-from ModernPortfolio import ModernPortfolio
+from .ModernPortfolio import ModernPortfolio
 
 class CAPM(ModernPortfolio):
     """

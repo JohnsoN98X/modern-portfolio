@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import cvxpy as cp
-from ModernPortfolio import ModernPortfolio
+from .ModernPortfolio import ModernPortfolio
 import logging
 logging.basicConfig(level=logging.INFO)
 

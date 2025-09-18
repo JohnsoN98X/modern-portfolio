@@ -2,9 +2,10 @@ data/*
 !data/.gitkeep
 
 __pycache__/
-*.py[cod]
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+*.xlsx
 
-# Ignore Jupyter checkpoints
-**/.ipynb_checkpoints/
 
 
