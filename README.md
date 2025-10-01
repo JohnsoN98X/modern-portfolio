@@ -11,6 +11,7 @@ The goal is to bridge theoretical rigor with numerical tools that are applicable
 ## 📦 Project Structure
 The repository is organized as follows:  
 
+```text
 project-root/
 │
 ├─ src/
@@ -36,7 +37,7 @@ project-root/
 │
 ├─ requirements.txt
 └─ README.md
-
+```
 
 ### 🔹 Classical Methods
 Located under `src/classical` and `notebooks/classical`.
