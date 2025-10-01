@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.covariance import LedoitWolf
+import warnings
 
 class PCARiskAllocator:
     """
@@ -30,32 +31,52 @@ class PCARiskAllocator:
         )
         return ' | '.join(parts)
 
-    def fit(self, risk_target, allocation='minvar', cov_method='ledoit'):
+    
+    def fit(self, allocation='minvar', cov_method='ledoit', normalize=True, risk_target=None):
         """
         Fit the PCA risk allocation model and compute portfolio weights.
 
         Parameters
         ----------
-        risk_target : float
-            Target portfolio volatility.
         allocation : str, default='minvar'
             Method for distributing risk across principal components. Options:
             - 'minvar' : All risk on the last principal component (lowest variance).
             - 'equal' : Equal risk allocation to all components.
             - 'proportional' : Risk proportional to each eigenvalue (variance explained).
             - 'inverse' : Risk inversely proportional to each eigenvalue.
+        cov_method : str, default='ledoit'
+            Covariance estimation method. Options:
+            - 'ledoit' : Ledoit-Wolf shrinkage estimator.
+            - 'sample' : Sample covariance matrix.
+        normalize : bool, default=True
+            If True, weights are normalized so that their sum equals 1.
+            In this case, risk_target is ignored.
+            If False, weights are scaled so that the portfolio volatility equals risk_target.
+        risk_target : float, optional
+            Target portfolio volatility. Must be provided if normalize=False.
         """
+        # --- covariance estimation ---
         if cov_method == 'ledoit':
             lw = LedoitWolf().fit(self._returns)
             self._cov = lw.covariance_
         elif cov_method == 'sample':
             self._cov = np.cov(self._returns.T)
-
+    
+        # --- input validation ---
+        if normalize:
+            if risk_target is not None:
+                warnings.warn("normalize=True; risk_target will be ignored")
+        else:
+            if risk_target is None:
+                raise ValueError("normalize=False requires risk_target")
+    
+        # --- eigen decomposition ---
         evalues, evectors = np.linalg.eigh(self._cov)
         index = evalues.argsort()[::-1]
         self._evalues = evalues[index]
         self._evectors = evectors[:, index]
-
+    
+        # --- risk distribution ---
         if allocation == 'minvar':
             self._risk_dist = np.zeros(len(self._evalues))
             self._risk_dist[-1] = 1
@@ -68,12 +89,28 @@ class PCARiskAllocator:
             self._risk_dist = inv / inv.sum()
         else:
             raise KeyError(f"Unexpected allocation: {allocation}")
-
-        self._loads = risk_target * (self._risk_dist / self._evalues)**0.5
+    
+        # --- compute loadings ---
+        # If normalize=True, risk_target is ignored (scale=1)
+        scale = risk_target if (risk_target is not None and not normalize) else 1.0
+        self._loads = scale * (self._risk_dist / self._evalues) ** 0.5
+    
+        # --- compute raw weights ---
         w = self._evectors @ self._loads.reshape(-1, 1)
         w = w.ravel()
         self._sigma = float(np.sqrt(w @ self._cov @ w))
-        self._w = w * (risk_target / self._sigma)
+    
+        # --- normalize or scale ---
+        if normalize:
+            denom = np.sum(w)
+            if denom == 0:
+                raise ValueError("all-zero weight vector; cannot normalize.")
+            w = w / denom
+        else:
+            w = w * (risk_target / self._sigma)
+    
+        self._w = w
+
 
     @property
     def weights(self):

@@ -9,8 +9,34 @@ The goal is to bridge theoretical rigor with numerical tools that are applicable
 ---
 
 ## 📦 Project Structure
+The repository is organized as follows:  
 
-The project is divided into two main modules:
+project-root/
+│
+├─ src/
+│  ├─ classical/
+│  │  ├─ CAPM.py
+│  │  ├─ FactorModelOLS.py
+│  │  └─ MeanVarianceOptimize.py
+│  │
+│  └─ modern/
+│     └─ PCARiskAllocator.py
+│
+├─ notebooks/
+│  ├─ classical/
+│  │  ├─ capm_examples.ipynb
+│  │  ├─ factor_model_ols_examples.ipynb
+│  │  └─ mean_variance_optimize_examples.ipynb
+│  │
+│  └─ modern/
+│     └─ pca_risk_allocator_examples.ipynb
+│
+├─ experiments/
+│  └─ pca_stress_test.ipynb
+│
+├─ requirements.txt
+└─ README.md
+
 
 ### 🔹 Classical Methods
 Located under `src/classical` and `notebooks/classical`.
@@ -54,7 +80,7 @@ Located under `src/modern` and `notebooks/modern`.
 
 ## 📡 Data Source & Usage
 
-The dataset used for testing was retrieved using the `ib_insync` library connected to Interactive Brokers (IB),  
+The dataset used for testing `MinVarianceOpt` was retrieved using the `ib_insync` library connected to Interactive Brokers (IB),  
 and also via the `yfinance` API for reproducibility.  
 Due to IB’s licensing policy, **raw market data is excluded** from this repository.
 
